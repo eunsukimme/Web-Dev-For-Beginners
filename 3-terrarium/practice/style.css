@@ -49,6 +49,10 @@ h1 {
   z-index: 1;
 }
 
+#jar {
+  position: absolute;
+}
+
 .jar-walls {
   height: 80%;
   width: 60%;
@@ -101,4 +105,13 @@ h1 {
   left: 20%;
   opacity: 0.7;
   z-index: -1;
+}
+
+.hide {
+  display: none;
+}
+
+.drag-over {
+  background: #8cc4bd;
+  border: 3px dotted red;
 }

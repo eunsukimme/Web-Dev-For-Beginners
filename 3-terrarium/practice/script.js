@@ -1,52 +1,52 @@
-dragElement(document.getElementById("plant1"));
-dragElement(document.getElementById("plant2"));
-dragElement(document.getElementById("plant3"));
-dragElement(document.getElementById("plant4"));
-dragElement(document.getElementById("plant5"));
-dragElement(document.getElementById("plant6"));
-dragElement(document.getElementById("plant7"));
-dragElement(document.getElementById("plant8"));
-dragElement(document.getElementById("plant9"));
-dragElement(document.getElementById("plant10"));
-dragElement(document.getElementById("plant11"));
-dragElement(document.getElementById("plant12"));
-dragElement(document.getElementById("plant13"));
-dragElement(document.getElementById("plant14"));
+const plants = document.querySelectorAll(".plant");
 
-let maxZIndex = 2;
+plants.forEach((plant) => {
+  dragElement(plant);
+});
 
 function dragElement(terrariumElement) {
-  //set 4 positions for positioning on the screen
-  let xDiff = 0,
-    yDiff = 0,
-    currentX = 0,
-    currentY = 0;
-  terrariumElement.ondblclick = toFront;
-  terrariumElement.onpointerdown = pointerDrag;
-  function pointerDrag(e) {
-    e.preventDefault();
-    terrariumElement.style.transform = "scale(1.2)";
+  terrariumElement.addEventListener("dragstart", dragStart);
+}
+function dragStart(e) {
+  console.log("drag starts...");
+  e.dataTransfer.setData("text/plain", e.target.id);
+  setTimeout(() => {
+    e.target.classList.add("hide");
+  }, 0);
+}
 
-    currentX = e.clientX;
-    currentY = e.clientY;
-    document.onpointermove = elementDrag;
-    document.onpointerup = stopElementDrag;
-  }
-  function elementDrag(e) {
-    xDiff = currentX - e.clientX;
-    yDiff = currentY - e.clientY;
-    currentX = e.clientX;
-    currentY = e.clientY;
-    terrariumElement.style.top = terrariumElement.offsetTop - yDiff + "px";
-    terrariumElement.style.left = terrariumElement.offsetLeft - xDiff + "px";
-  }
-  function stopElementDrag() {
-    document.onpointerup = null;
-    document.onpointermove = null;
-    terrariumElement.style.transform = "scale(1)";
-  }
-  function toFront(e) {
-    maxZIndex += 1;
-    e.target.style.zIndex = maxZIndex;
-  }
+const jar = document.getElementById("jar");
+
+jar.addEventListener("dragenter", dragEnter);
+jar.addEventListener("dragover", dragOver);
+jar.addEventListener("dragleave", dragLeave);
+jar.addEventListener("drop", drop);
+
+function dragEnter(e) {
+  e.preventDefault();
+  e.target.classList.add("drag-over");
+}
+function dragOver(e) {
+  e.preventDefault();
+  e.target.classList.add("drag-over");
+}
+function dragLeave(e) {
+  e.target.classList.remove("drag-over");
+}
+function drop(e) {
+  e.target.classList.remove("drag-over");
+
+  // get data from dataTransfer
+  const id = e.dataTransfer.getData("text/plain");
+  // find by retrieved id
+  const draggable = document.getElementById(id);
+
+  // append dragabble to drop target's child
+  e.target.appendChild(draggable);
+  draggable.style.position = "absolute";
+  draggable.style.width = "20%";
+  draggable.style.left = `${Math.floor(Math.random() * 40) + 20}%`;
+  draggable.style.bottom = `${Math.floor(Math.random() * 3) + 3}%`;
+  // display draggable element
+  draggable.classList.remove("hide");
 }
