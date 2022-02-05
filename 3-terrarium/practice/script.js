@@ -25,6 +25,8 @@ function dragElement(terrariumElement) {
   terrariumElement.onpointerdown = pointerDrag;
   function pointerDrag(e) {
     e.preventDefault();
+    terrariumElement.style.transform = "scale(1.2)";
+
     currentX = e.clientX;
     currentY = e.clientY;
     document.onpointermove = elementDrag;
@@ -41,6 +43,7 @@ function dragElement(terrariumElement) {
   function stopElementDrag() {
     document.onpointerup = null;
     document.onpointermove = null;
+    terrariumElement.style.transform = "scale(1)";
   }
   function toFront(e) {
     maxZIndex += 1;
