@@ -1,14 +1,41 @@
-function loadTexture(path) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.src = path;
-    img.onload = () => {
-      resolve(img);
-    };
-  });
+import { loadTexture } from './utils'
+import Hero from './models/Hero';
+import Enemy from './models/Enemy';
+import { handleKeyDown, handleKeyUp } from './events/keyboard';
+import { registerHeroMoveEvent } from './events';
+
+let gameObjects = [];
+
+async function initGame() {
+  let canvas = document.getElementById("canvas");
+  let ctx = canvas.getContext("2d");
+  let heroImg = await loadTexture("assets/player.png");
+  let enemyImg = await loadTexture("assets/enemyShip.png");
+  let laserImg = await loadTexture("assets/laserRed.png");
+
+  createHero(canvas, heroImg);
+  createEnemies(canvas, enemyImg);
+
+  registerHeroMoveEvent();
+
+  let gameLoopId = setInterval(() => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    drawGameObjects(ctx);
+  }, 100)
 }
 
-function createEnemies(ctx, canvas, enemyImg) {
+function createHero(canvas, heroImg) {
+  const hero = new Hero(
+    canvas.width / 2 - 45,
+    canvas.height - canvas.height / 4
+  );
+  hero.img = heroImg;
+  gameObjects.push(hero);
+}
+
+function createEnemies(canvas, enemyImg) {
   const MONSTER_TOTAL = 5;
   const MONSTER_WIDTH = MONSTER_TOTAL * 98;
   const START_X = (canvas.width - MONSTER_WIDTH) / 2;
@@ -16,23 +43,19 @@ function createEnemies(ctx, canvas, enemyImg) {
 
   for (let x = START_X; x < STOP_X; x += 98) {
     for (let y = 0; y < 50 * 5; y += 50) {
-      ctx.drawImage(enemyImg, x, y);
+      const enemy = new Enemy(x, y);
+      enemy.img = enemyImg;
+      gameObjects.push(enemy);
     }
   }
 }
 
-window.onload = async () => {
-  canvas = document.getElementById("canvas");
-  ctx = canvas.getContext("2d");
-  const heroImg = await loadTexture("assets/player.png");
-  const enemyImg = await loadTexture("assets/enemyShip.png");
+function drawGameObjects(ctx) {
+  gameObjects.forEach(object => object.draw(ctx));
+}
 
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(
-    heroImg,
-    canvas.width / 2 - 45,
-    canvas.height - canvas.height / 4
-  );
-  createEnemies(ctx, canvas, enemyImg);
+window.addEventListener('keydown', handleKeyDown)
+window.addEventListener('keyup', handleKeyUp)
+window.onload = async () => {
+  initGame();
 };
