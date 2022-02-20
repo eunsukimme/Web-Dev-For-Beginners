@@ -17,6 +17,9 @@ export function handleKeyUp(event) {
   if(event.key === 'ArrowLeft') {
     eventEmitter.emit(Messages.KEY_EVENT_LEFT)
   }
+  if(event.keyCode === 32) {
+    eventEmitter.emit(Messages.KEY_EVENT_SPACE);
+  }
 }
 
 

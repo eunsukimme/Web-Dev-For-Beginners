@@ -13,6 +13,7 @@ export default class EventEmitter {
       this.listener[message] = [];
     }
     this.listener[message].push(listener);
+    return this
   }
 
   emit(message, payload = null) {
