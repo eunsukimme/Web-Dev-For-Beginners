@@ -1,6 +1,10 @@
 import { Messages } from "../messages";
 import EventEmitter from "../models/EventEmitter";
+import Explosion from '../models/Explosion';
+import GameObjects from "../models/GameObjects";
 import Hero from "../models/Hero";
+import { loadTexture } from "../utils";
+
 
 export function initMessageHandlers() {
   const eventEmitter = new EventEmitter();
@@ -23,8 +27,12 @@ export function initMessageHandlers() {
       hero.fire();
     }
   })
-  .on(Messages.COLLISION_ENEMY_LASER, (_, { first, second }) => {
+  .on(Messages.COLLISION_ENEMY_LASER, async (_, { first, second }) => {
     first.dead = true;
     second.dead = true;
+
+    const explosion = new Explosion(first.x - 28, first.y - 20)
+    explosion.img = await loadTexture('assets/laserRedShot.png')
+    GameObjects.getInstance.list.push(explosion)
   })
 }
