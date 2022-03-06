@@ -1,9 +1,7 @@
 import { Messages } from "../messages";
 import EventEmitter from "../models/EventEmitter";
 
-
 export function handleKeyUp(event) {
-  console.log(event.key);
   const eventEmitter = new EventEmitter();
   if(event.key === 'ArrowUp') {
     eventEmitter.emit(Messages.KEY_EVENT_UP)

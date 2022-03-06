@@ -54,12 +54,16 @@ export function drawLife(ctx, lifeImg) {
   }
 }
 
-export function drawPoints(ctx) {
+export async function drawPoints(ctx, numberImgs) {
   const hero = new Hero();
-  ctx.font = "30px Arial";
-  ctx.fillStyle = "red";
+  ctx.font = "24px Arial";
+  ctx.fillStyle = "white";
   ctx.textAlign = "left";
-  drawText(ctx, `Points: ${hero.points}`, 10, canvas.height - 20);
+  drawText(ctx, `Points:`, 10, canvas.height - 20);
+  [...hero.points.toString()].forEach(async (point_char, index) => {
+    const pointImg = numberImgs[Number(point_char)]
+    ctx.drawImage(pointImg, 88 + (index * 20), canvas.height - 36);
+  })
 }
 
 export function drawText(ctx, message, x, y) {

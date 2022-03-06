@@ -5,10 +5,20 @@ import { initMessageHandlers } from './events/messages';
 async function initGame() {
   let canvas = document.getElementById("canvas");
   let ctx = canvas.getContext("2d");
-  const [heroImg, enemyImg, lifeImg] = await Promise.all([
+  const [heroImg, enemyImg, lifeImg, ...numberImgs] = await Promise.all([
     loadTexture("assets/player.png"),
     loadTexture("assets/enemyShip.png"),
-    loadTexture("assets/life.png")
+    loadTexture("assets/life.png"),
+    loadTexture("assets/number_0.png"),
+    loadTexture("assets/number_1.png"),
+    loadTexture("assets/number_2.png"),
+    loadTexture("assets/number_3.png"),
+    loadTexture("assets/number_4.png"),
+    loadTexture("assets/number_4.png"),
+    loadTexture("assets/number_5.png"),
+    loadTexture("assets/number_6.png"),
+    loadTexture("assets/number_7.png"),
+    loadTexture("assets/number_8.png"),
   ])
 
   createHero(canvas, heroImg);
@@ -16,15 +26,17 @@ async function initGame() {
 
   initMessageHandlers();
 
-  let gameLoopId = setInterval(() => {
+  const runGameloop = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     updateGameObjects();
     drawGameObjects(ctx);
-    drawPoints(ctx);
+    drawPoints(ctx, numberImgs);
     drawLife(ctx, lifeImg);
-  }, 100)
+    requestAnimationFrame(runGameloop);
+  }
+  requestAnimationFrame(runGameloop);
 }
 
 window.addEventListener('keydown', handleKeyDown)
